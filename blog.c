@@ -71,7 +71,7 @@ indexpage_db_sql(int dbconn)
 	MYSQL_RES      *ret;
 	MYSQL_ROW	row;
 
-	asprintf(&bodyquery, "SELECT title, content FROM content WHERE type='frontpage'");
+	xasprintf(&bodyquery, "SELECT title, content FROM content WHERE type='frontpage'");
 
 	pthread_setcancelstate(PTHREAD_CANCEL_DISABLE, &cancelstate);
 	if (mysql_thread_init() != 0)
@@ -82,9 +82,9 @@ indexpage_db_sql(int dbconn)
 
 	if (ret != NULL) {
 		row = mysql_fetch_row(ret);
-		asprintf(&body, "<h3>%s</h3>\n%s", row[0], row[1]);
+		xasprintf(&body, "<h3>%s</h3>\n%s", row[0], row[1]);
 	} else {
-		asprintf(&body, "MYSQL_RES was NULL...  %s\n", mysql_error(dbm[dbconn].db));
+		xasprintf(&body, "MYSQL_RES was NULL...  %s\n", mysql_error(dbm[dbconn].db));
 	}
 
 	free(bodyquery);

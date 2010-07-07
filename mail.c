@@ -93,7 +93,7 @@ mail_sendmessage(char *to, char *from, char *subject, char *message)
 		mail_sendcmd(mail_fd, buf);
 
 		indata = 1;
-		ret = asprintf(&fullmsg, "From: \"System Alerter\" <%s>\r\n"
+		ret = xasprintf(&fullmsg, "From: \"System Alerter\" <%s>\r\n"
 			       "To: %s\r\n"
 			       "Subject: %s\r\n"
 			       "X-Mailer: System Alerter by Emiel Kollof\r\n"
@@ -106,7 +106,7 @@ mail_sendmessage(char *to, char *from, char *subject, char *message)
 			       message);
 		mail_sendcmd(mail_fd, fullmsg);
 		if (ret < 0) {
-			perror("mail.c: mail_sendmessage: asprintf error");
+			perror("mail.c: mail_sendmessage: xasprintf error");
 			exit(-1);
 		}
 		free(fullmsg);

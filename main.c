@@ -75,15 +75,9 @@ main(int argc, char **argv, char **environ)
 			dbprintf("Daemonizing failed, aborting\n");
 			exit(1);
 		}
-		ret = asprintf(&buf, "%d\n", getpid());
-		if (ret < 0) {
-			perror("main.c: main: asprintf failed");
-			return 1;
-		}
-		if (buf == NULL) {
-			perror("main: something screwed up...");
-			exit(1);
-		}
+
+		xasprintf(&buf, "%d\n", getpid());
+
 		fd = open("blog.pid", O_RDWR | O_CREAT, 0644);
 		chmod("blog.pid", 0644);
 		ret = write(fd, buf, strlen(buf) + 1);
