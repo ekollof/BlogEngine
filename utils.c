@@ -103,8 +103,12 @@ stripchar(char *buf, int strip)
 	 */
 
 	char           *ptr = buf;
-	int		len;
+	size_t		len;
 	char		c;
+
+	if (buf == NULL)
+		return;
+
 	len = strlen(buf) + 1;	/* adjust for \0 */
 	while (--len > 0) {
 		c = *ptr++;
@@ -131,6 +135,10 @@ strupper(char *buf, int strip)
 	char           *ptr = buf;
 	int		len;
 	char		c;
+
+	if (buf == NULL)
+		return;
+
 	len = strlen(buf) + 1;	/* adjust for \0 */
 	while (--len > 0) {
 		c = *ptr++;
@@ -158,6 +166,9 @@ cleading(char *buf)
 	size_t		len;
 	char		c;
 	int		done = 0;
+
+	if (buf == NULL)
+		return;
 
 	len = strlen(buf) + 1;	/* adjust for trailing 0 */
 	while (--len > 0) {
@@ -196,6 +207,9 @@ ctrailing(char *buf)
 	 */
 
 	int		len       , done = 0;
+
+	if (buf == NULL) 
+		return;
 
 	len = strlen(buf);
 	while (len-- > 0) {

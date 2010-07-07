@@ -55,6 +55,10 @@
 #include <mysql.h>
 #include "mongoose.h"
 
+#ifdef FreeBSD
+#include <err.h>
+#endif
+
 #if defined(__linux__) || defined(GLIBC)
 #include <getopt.h>
 #endif
@@ -62,12 +66,14 @@
 #ifdef Linux
 #define NO_NATIVE_STRLCPY
 #define NO_SETPROCTITLE
+#define NO_ERRH
 #endif
 
 #ifdef SunOS
 #define NO_ASPRINTF
 #define NO_DAEMON
 #define NO_SETPROCTITLE
+#define NO_ERRH
 #endif
 
 #ifdef FreeBSD

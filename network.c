@@ -151,8 +151,8 @@ nprintf(int sock, char *fmt,...)
 int
 network_read(int fd, char *bp, size_t len)
 {
-	int		cnt;
-	int		rc;
+	size_t		cnt;
+	ssize_t		rc;
 
 	cnt = len;
 	while (cnt > 0) {
@@ -182,9 +182,12 @@ network_gets(int fd, char *bufptr, size_t len)
 {
 	char           *bufx = bufptr;
 	static char    *bp;
-	static int	cnt = 0;
+	ssize_t 	cnt = 0;
 	static char	b   [1500];
 	char		c;
+
+	if (len == 0)	// prevent underflow
+		return -1;
 
 	while (--len > 0) {
 		if (--cnt <= 0) {
