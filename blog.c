@@ -121,15 +121,15 @@ indexpage_db(struct mg_connection *conn,
 			content = replace(webpage, "{{{TITLE}}}", title);
 	tmp = replace(content, "{{{SLOGAN}}}", slogan);
 	free(content);
-	content = strdup(tmp);
+	(content = strdup(tmp)) ? : err(1, "indexpage_db: strdup");
 	free(tmp);
 	tmp = replace(content, "{{{BODY}}}", body);
 	free(content);
-	content = strdup(tmp);
+	(content = strdup(tmp)) ? : err(1, "indexpage_db: strdup");
 	free(tmp);
 	tmp = replace(content, "{{{MENU}}}", menutext);
 	free(content);
-	content = strdup(tmp);
+	(content = strdup(tmp)) ? : err(1, "indexpage_db: strdup");
 	free(tmp);
 
 	if (doTidy) {
