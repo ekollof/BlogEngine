@@ -137,6 +137,8 @@ indexpage_db(struct mg_connection *conn,
 	} else {
 		result = strdup(content);
 	}
+	if (result == NULL)
+		err(1, "strdup");
 
 	mg_printf(conn, "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n");
 	mg_printf(conn, "%s", result);
