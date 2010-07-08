@@ -329,61 +329,6 @@ stripjunk(char *buf)
 	return;
 }
 
-
-void
-replacenull(char *buf, size_t len)
-{
-	size_t		slen;
-
-	while (len > (slen = strlen(buf))) {
-		buf[slen - 1] = ' ';
-		buf += slen;
-		len -= slen;
-	}
-
-	return;
-}
-
-
-
-/**
- * Reads in file from file pointer and allocates enough memory to store it. Allocates memory, so don't forget to free() it.
- * @param fp File pointer to file.
- * @return pointer to allocated memory containing the configfile.
- */
-char           *
-suckfile(FILE * fp)
-{
-	/*
-	 * gets file from fp, and automatically allocates storage for it.
-	 * Make sure you free when you ever use this in a library or a
-	 * daemon.
-	 */
-
-	char		buf       [1024], *r;
-	unsigned int	size = 0;
-
-	if (fp == NULL) {
-		perror("fp was NULL? Bailing!");
-		exit(1);
-	}
-	r = NULL;
-	while (fgets(buf, sizeof(buf) - 1, fp)) {
-		size += strlen(buf);
-		if ((r = (char *)realloc(r, size + 1)) == NULL) {
-			perror("realloc");
-			exit(1);
-		}
-		strlcat(r, buf, size);
-	}
-	if (!feof(fp)) {
-		perror("suckfile");
-		exit(1);
-		/* NOTREACHED */
-	}
-	return r;
-}
-
 char           *
 suckfile_mmap(char *path)
 {
@@ -396,29 +341,36 @@ suckfile_mmap(char *path)
 
 	fd = open(path, O_RDONLY);
 	if (fd < 0) {
-		perror("open");
+		warn("open: %s", path);
 		return NULL;
 	}
+
 	if (fstat(fd, &st) == -1) {
-		perror("fstat");
+		err(1, "fstat");
+		close(fd);
 		return NULL;
 	}
+
 	buf = mmap(0, st.st_size, PROT_READ, MAP_SHARED, fd, 0);
-	if (ret == MAP_FAILED) {
-		perror("mmap");
+	if (buf == MAP_FAILED) {
+		err(1, "mmap");
+		close(fd);
 		return NULL;
 	}
 	r = close(fd);
 	if (r == -1) {
-		perror("close");
+		err(1, "close");
+		return NULL;
 	}
+
 	ret = strdup(buf);
 
 	//Cleanup
 		r = munmap(buf, st.st_size);
 	if (r == -1) {
-		perror("munmap");
+		err(1, "munmap");
 	}
+
 	return ret;
 }
 
@@ -440,7 +392,10 @@ dbprintf(char *fmt,...)
 	char           *snow;
 
 	time(&now);
-	snow = strdup(ctime(&now));
+	if ((snow = strdup(ctime(&now))) == NULL) {
+		err(1, "strdup");
+	}
+	
 	chomp(snow);
 
 	if (debug) {
@@ -448,7 +403,7 @@ dbprintf(char *fmt,...)
 		va_start(ap, fmt);
 		ret = vasprintf(&buf, fmt, ap);
 		if (ret < 0) {
-			perror("utils.c: dbprintf: vasprintf error");
+			err(1, "utils.c: dbprintf: vasprintf error");
 			return;
 		}
 		va_end(ap);
@@ -458,7 +413,7 @@ dbprintf(char *fmt,...)
 		} else {
 			fp = fopen(logfile, "a");
 			if (!fp) {
-				perror("Opening logfile failed...\n");
+				err(1, "fopen: %s", logfile);
 			}
 			fprintf(fp, "%s (pid%d) [DEBUG] %s", snow, getpid(), buf);
 			fclose(fp);
@@ -488,7 +443,9 @@ vbprintf(char *fmt,...)
 	char           *snow;
 
 	time(&now);
-	snow = strdup(ctime(&now));
+	if ((snow = strdup(ctime(&now))) == NULL) {
+		err(1, "strdup");
+	}
 	chomp(snow);
 
 	if (verbose) {
@@ -496,7 +453,7 @@ vbprintf(char *fmt,...)
 		va_start(ap, fmt);
 		ret = vasprintf(&buf, fmt, ap);
 		if (ret < 0) {
-			perror("utils.c: vbprintf: vasprintf error");
+			err(1, "utils.c: vbprintf: vasprintf error");
 			return;
 		}
 		va_end(ap);

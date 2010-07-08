@@ -104,11 +104,11 @@ mail_sendmessage(char *to, char *from, char *subject, char *message)
 			       to,
 			       subject,
 			       message);
-		mail_sendcmd(mail_fd, fullmsg);
 		if (ret < 0) {
 			perror("mail.c: mail_sendmessage: xasprintf error");
 			exit(-1);
 		}
+		mail_sendcmd(mail_fd, fullmsg);
 		free(fullmsg);
 		indata = 0;
 
@@ -134,12 +134,14 @@ int
 mail_sendcmd(int mail_fd, char *data)
 {
 	char		buf       [8192], junk[8192];
-	int		statuscode;
+	int		statuscode = 0;
 
 	nprintf(mail_fd, "%s", data);
 
 	while (network_gets(mail_fd, buf, sizeof(buf) - 1)) {
-		chomp(buf);
+
+		chomp(buf); // Should check *buf, but that's done in chomp();
+
 		dbprintf("mail_sendcmd: <<< %s\n", buf);
 		if (rx_match(buf, "^[0-9]{3} .*$")) {	/* numbers with a space
 							 * instead of a - */
@@ -156,7 +158,7 @@ mail_sendcmd(int mail_fd, char *data)
 			dbprintf("mail_sendcmd: Command ok\n");
 			return statuscode;
 		}
-		dbprintf("mail_sendcmd: command failed: \n", data);
+		dbprintf("mail_sendcmd: command failed: %s\n", data);
 		return -1;
 	} else {
 		return 0;

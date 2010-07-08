@@ -41,7 +41,7 @@ mysql_conn(MYSQL * mysql, db_config * dbc)
 				    dbc->name, dbc->port, dbc->socket, 0)) {
 			vbprintf("host: %s user: %s pass: %s db: %s\n",
 				 dbc->host, dbc->user, dbc->pass, dbc->name);
-			mysql_die("mysql_real_connect failed:", mysql_error(mysql));
+			mysql_die("mysql_real_connect failed: %s", mysql_error(mysql));
 		}
 	}
 	dbprintf("DB connection active.\n");

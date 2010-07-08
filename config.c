@@ -146,6 +146,9 @@ config_feed(char *config)
 	char           *buf, *ptr;
 
 	buf = (char *)strdup(config);
+	if (buf == NULL) { 
+		err(1, "strdup");
+	}
 
 	line = 0;
 	matched = 0;

@@ -79,6 +79,11 @@ main(int argc, char **argv, char **environ)
 		xasprintf(&buf, "%d\n", getpid());
 
 		fd = open("blog.pid", O_RDWR | O_CREAT, 0644);
+
+		if (fd < 0) {
+			err(1,"main: open: blog.pid");
+		}
+
 		chmod("blog.pid", 0644);
 		ret = write(fd, buf, strlen(buf) + 1);
 		close(fd);
