@@ -259,3 +259,79 @@ setproctitle(char *fmt,...)
 
 }
 #endif
+
+
+#ifdef NO_ERRH
+
+void err(int eval, const char *fmt, ...)
+{
+	va_list ap;
+
+	va_start(ap, fmt);
+	verr(eval, fmt, ap);
+	va_end(ap);
+}
+
+void errx(int eval, const char *fmt, ...)
+{
+	va_list ap;
+
+	va_start(ap, fmt);
+	verrx(eval, fmt, ap);
+	va_end(ap);
+}
+
+void warn(const char fmt, ...)
+{
+	va_list ap;
+
+	va_start(ap, fmt);
+	vwarn(fmt, ap);
+	va_end(ap);
+}
+
+void warnx(const char fmt, ...)
+{
+	va_list ap;
+
+	va_start(ap, fmt);
+	vwarnx(fmt, ap);
+	va_end(ap);
+}
+
+void verr(int eval, const char *fmt, va_list args)
+{
+	fprintf(stderr, "verr: ");
+	if (fmt != NULL) {
+		vfprintf(stderr, fmt, args);
+	}
+	perror("");
+	exit(eval);
+}
+
+void verrx(int eval, const char *fmt, va_list args)
+{
+	fprintf(stderr, "verrx: ");
+	if (fmt != NULL) {
+		vfprintf(stderr, fmt, args);
+	}
+	exit(eval);
+}
+
+void vwarn(const char *fmt, va_list args)
+{
+	fprintf(stderr, "vwarn: ");
+	if (fmt != NULL) {
+		vfprintf(stderr, fmt, args);
+	}
+	perror("");
+}
+
+void vwarnx(const char *fmt, va_list args)
+{
+	fprintf(stderr, "vwarnx: ");
+	if (fmt != NULL) {
+		vfprintf(stderr, fmt, args);
+	}
+}
+#endif
