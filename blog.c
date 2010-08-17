@@ -84,7 +84,17 @@ indexpage_db_sql(int dbconn)
 		row = mysql_fetch_row(ret);
 		xasprintf(&body, "<h3>%s</h3>\n%s", row[0], row[1]);
 	} else {
-		xasprintf(&body, "MYSQL_RES was NULL...  %s\n", mysql_error(dbm[dbconn].db));
+		db_config dbc;
+
+		/* MySQL server seems to be gone, trying reconnect instance */
+		strlcpy(dbc.host, dbhost, strlen(dbhost) + 1);         
+		strlcpy(dbc.user, dbuser, strlen(dbuser) + 1);         
+		strlcpy(dbc.pass, dbpass, strlen(dbpass) + 1);
+		strlcpy(dbc.name, dbname, strlen(dbname) + 1);	
+		mysql_conn(dbm[dbconn].db, &dbc);
+
+		/* recurse */
+		indexpage_db_sql(dbconn);
 	}
 
 	free(bodyquery);
