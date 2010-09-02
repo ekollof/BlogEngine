@@ -86,12 +86,16 @@ indexpage_db_sql(int dbconn)
 	} else {
 		db_config dbc;
 
+		mysql_disc(dbm[dbconn].db);
+
 		/* MySQL server seems to be gone, trying reconnect instance */
 		strlcpy(dbc.host, dbhost, strlen(dbhost) + 1);         
 		strlcpy(dbc.user, dbuser, strlen(dbuser) + 1);         
 		strlcpy(dbc.pass, dbpass, strlen(dbpass) + 1);
 		strlcpy(dbc.name, dbname, strlen(dbname) + 1);	
 		mysql_conn(dbm[dbconn].db, &dbc);
+
+		pthread_setcancelstate(PTHREAD_CANCEL_ENABLE, &cancelstate);
 
 		/* recurse */
 		indexpage_db_sql(dbconn);
