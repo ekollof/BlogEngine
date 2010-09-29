@@ -21,14 +21,15 @@ mysql_poolinit(void)
 		vbprintf("Using threaded mysql connection pool of %d threads\n", THREADS);
 	}
 
-	vbprintf("DB Connections: %d, Threads: %d, Queries per Thread: %d, Total Queries: %d\n",
-		 CONPOOL, THREADS, QPERTHR, THREADS * QPERTHR);
+	vbprintf("DB Connections: %d, Threads: %d\n",
+		 CONPOOL, THREADS);
 
 	//Pre - init
 		for (i = 0; i < CONPOOL; i++) {
 		dbm[i].db = mysql_conn(dbm[i].db, &dbc);
 		pthread_mutex_init(&dbm[i].lock, NULL);
 	}
+	vbprintf("MySQL init done.\n");
 }
 
 MYSQL          *

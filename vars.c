@@ -21,7 +21,7 @@ int		nodaemon = 0;	/* 0 == false, init done like this to shut up
 				 * sunpro compiler */
 int		verbose = 1;
 int		debug = 1;
-int		logging = 0;
+int		logging = 1;
 int		doTidy = 0;
 
 #if !defined(SunOS) && !defined(Linux) && !defined(FreeBSD)

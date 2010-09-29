@@ -96,8 +96,9 @@ typedef void    (*client_hndlr) (int);
 #define true 1
 #define false 0
 
-#define QPERTHR 500
+#ifndef THREADS
 #define THREADS 8
+#endif
 #define CONPOOL (THREADS)
 
 
