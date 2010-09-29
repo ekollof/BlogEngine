@@ -91,7 +91,7 @@ daemon(int nochdir, int noclose)
 	case 0:
 		break;
 	default:
-		exit(0);
+		exit(EXIT_SUCCESS);
 	}
 	if (setsid() == -1)
 		return -1;

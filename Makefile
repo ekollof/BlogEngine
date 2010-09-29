@@ -29,7 +29,7 @@ all: proto $(OBJS)
 	$(CC) -o $(PROG) $(OBJS) $(LDFLAGS)
 
 clean:
-	-rm -f $(PROG) $(OBJS) *~ *.BAK *.pid *.log ${PROTOFILE}
+	-rm -f $(PROG) $(OBJS) *~ *.BAK *.pid *.log *.core ${PROTOFILE}
 
 proto:  
 	-cproto $(INCLUDEDIRS) $(MYSQLINC) ${OSDEFS} -o ${PROTOFILE} -de ${MYSRC} 

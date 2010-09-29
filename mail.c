@@ -106,7 +106,7 @@ mail_sendmessage(char *to, char *from, char *subject, char *message)
 			       message);
 		if (ret < 0) {
 			perror("mail.c: mail_sendmessage: xasprintf error");
-			exit(-1);
+			exit(EXIT_FAILURE);
 		}
 		mail_sendcmd(mail_fd, fullmsg);
 		free(fullmsg);
@@ -116,7 +116,7 @@ mail_sendmessage(char *to, char *from, char *subject, char *message)
 		mail_sendcmd(mail_fd, buf);
 		vbprintf("mail_sendmessage: Mail sent to %s\n", mail_rcpt);
 #ifndef DONTFORK
-		exit(0);
+		exit(EXIT_SUCCESS);
 		break;		/* NOTREACHED */
 	case -1:		/* error */
 		perror("mail_sendmessage: fork");

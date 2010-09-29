@@ -666,6 +666,6 @@ xasprintf(char **ret, const char *fmt, ...)
 	i = vasprintf(ret, fmt, ap);         
 	va_end(ap);          
 	if (i < 0 || *ret == NULL)                 
-		errx(1, "xasprintf: could not allocate memory");          
+		errx(EXIT_FAILURE, "xasprintf: could not allocate memory");          
 	return (i); 
 }

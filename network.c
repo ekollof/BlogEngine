@@ -67,7 +67,7 @@ network_connect(char *hname, char *sname)
 	error = getaddrinfo(hname, sname, &hints, &res);
 	if (error != 0) {
 		vbprintf("network_connect: getaddrinfo: %s \n", gai_strerror(error));
-		exit(1);
+		return -1;
 	}
 	for (aip = res; aip != NULL; aip = aip->ai_next) {
 		s = socket(aip->ai_family, aip->ai_socktype, aip->ai_protocol);
@@ -104,10 +104,10 @@ network_send(int fd, char *buf)
 		if (bout == 0) {
 			vbprintf("netsend: socket disconnected.\n");
 			close(fd);
-			exit(0);
+			return (-1);
 		} else {
 			perror("netsend");
-			exit(1);
+			return (-1);
 		}
 	}
 	return (bout);
