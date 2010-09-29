@@ -34,9 +34,13 @@ mysql_poolinit(void)
 MYSQL          *
 mysql_conn(MYSQL * mysql, db_config * dbc)
 {
+	// Set auto-reconnect
+	my_bool reconnect=1;
+
 	if (!(mysql = mysql_init(mysql)))
 		mysql_die("mysql_init failed: %s", mysql_error(mysql));
 	else {
+		mysql_options(mysql, MYSQL_OPT_RECONNECT, &reconnect);
 		if (!mysql_real_connect(mysql, dbc->host, dbc->user, dbc->pass,
 				    dbc->name, dbc->port, dbc->socket, 0)) {
 			vbprintf("host: %s user: %s pass: %s db: %s\n",
@@ -47,6 +51,7 @@ mysql_conn(MYSQL * mysql, db_config * dbc)
 	dbprintf("DB connection active.\n");
 	return (mysql);
 }
+
 
 void
 mysql_die(char *fmt,...)
